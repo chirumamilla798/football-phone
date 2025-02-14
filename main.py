@@ -20,9 +20,9 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Chase Game")
 
 # Load images
-player1_img = pygame.image.load("ca1.png")
+player1_img = pygame.image.load("https://github.com/chirumamilla798/mygame/blob/main/ca1.png")
 player1_img = pygame.transform.scale(player1_img, (PLAYER_SIZE, PLAYER_SIZE))
-player2_img = pygame.image.load("ca2.png")
+player2_img = pygame.image.load("https://github.com/chirumamilla798/mygame/blob/main/ca2.png")
 player2_img = pygame.transform.scale(player2_img, (PLAYER_SIZE, PLAYER_SIZE))
 
 # Player and enemy positions
