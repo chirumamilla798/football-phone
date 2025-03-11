@@ -35,6 +35,8 @@
         ballImg.src = 'images/ball.png';
         const goalkeeperImg = new Image();
         goalkeeperImg.src = 'images/goalkeeper.png';
+		 const goalpostImg = new Image();
+        goalpostImg.src = 'images/goal.png';
 
         const player = { x: canvas.width / 2 - 25, y: 400, width: 50, height: 50, speed: 6 };
         const ball = { x: player.x + 20, y: 390, width: 10, height: 10, speedY: 0, isMoving: false };
@@ -84,6 +86,7 @@
             ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
             ctx.drawImage(ballImg, ball.x, ball.y, ball.width, ball.height);
             ctx.drawImage(goalkeeperImg, goalkeeper.x, goalkeeper.y, goalkeeper.width, goalkeeper.height);
+			ctx.drawImage(goalpostImg, 100, 0, 200, 50);
         }
 
         function gameLoop() {
