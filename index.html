@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Football Game</title>
+    <style>
+        body { text-align: center; background: green; }
+        canvas { background: white; display: block; margin: auto; border: 2px solid black; max-width: 100%; }
+        #scoreboard, #timer { font-size: 20px; color: white; }
+        .controls { display: flex; justify-content: center; margin-top: 10px; }
+        button { font-size: 20px; margin: 5px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Football Game: Score a Goal!</h1>
+    <div id="scoreboard">Score: 0</div>
+    <div id="timer">Time: 60</div>
+    <canvas id="gameCanvas"></canvas>
+    <div class="controls">
+        <button onclick="moveLeft()">⬅️</button>
+        <button onclick="shootBall()">⚽ Shoot</button>
+        <button onclick="moveRight()">➡️</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = Math.min(window.innerWidth - 20, 400);
+        canvas.height = 500;
+
+        const playerImg = new Image();
+        playerImg.src = 'images/player.png';
+        const ballImg = new Image();
+        ballImg.src = 'images/ball.png';
+        const goalkeeperImg = new Image();
+        goalkeeperImg.src = 'images/goalkeeper.png';
+
+        const player = { x: canvas.width / 2 - 25, y: 400, width: 50, height: 50, speed: 6 };
+        const ball = { x: player.x + 20, y: 390, width: 10, height: 10, speedY: 0, isMoving: false };
+        const goalkeeper = { x: canvas.width / 2 - 50, y: 50, width: 100, height: 20, speedX: 4 };
+        let score = 0;
+        let timeLeft = 60;
+
+        function moveLeft() { if (player.x > 0) player.x -= player.speed; }
+        function moveRight() { if (player.x < canvas.width - player.width) player.x += player.speed; }
+        function shootBall() { if (!ball.isMoving) { ball.isMoving = true; ball.speedY = -6; } }
+
+        function update() {
+            if (!ball.isMoving) ball.x = player.x + 20;
+            if (ball.isMoving) {
+                ball.y += ball.speedY;
+                if (ball.y < 0) resetGame(false);
+                if (ball.y <= goalkeeper.y + goalkeeper.height && ball.x > goalkeeper.x && ball.x < goalkeeper.x + goalkeeper.width) resetGame(false);
+                if (ball.y <= 10) { score++; updateScoreboard(); resetGame(true); }
+            }
+            goalkeeper.x += goalkeeper.speedX;
+            if (goalkeeper.x <= 0 || goalkeeper.x >= canvas.width - goalkeeper.width) goalkeeper.speedX *= -1;
+        }
+
+        function resetGame(scored) {
+            ball.y = 390;
+            ball.isMoving = false;
+            if (scored) alert("Goal!");
+        }
+
+        function updateScoreboard() {
+            document.getElementById("scoreboard").innerText = "Score: " + score;
+        }
+
+        function updateTimer() {
+            document.getElementById("timer").innerText = "Time: " + timeLeft;
+            if (timeLeft > 0) {
+                timeLeft--;
+                setTimeout(updateTimer, 1000);
+            } else {
+                alert("Time's up! Final Score: " + score);
+                document.location.reload();
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
+            ctx.drawImage(ballImg, ball.x, ball.y, ball.width, ball.height);
+            ctx.drawImage(goalkeeperImg, goalkeeper.x, goalkeeper.y, goalkeeper.width, goalkeeper.height);
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        gameLoop();
+        updateTimer();
+    </script>
+</body>
+</html>
